@@ -69,15 +69,27 @@ class VowelGenerator:
     # ===== ny =====
     def ny_generate(self, freq, t, vowel):
         base = self._pulse(freq, t)
-
-        fade_time = 0.04
-
-        n = self._f(self._slice(base, 0, 0.04, overlap=(0,fade_time)), "n")
-        y = self._f(self._slice(base, 0.04, 0.08, overlap=(fade_time,fade_time)), "y")
-        u = self._f(self._slice(base, 0.08, 0.11, overlap=(fade_time,fade_time)), "u")
-        v = self._f(self._slice(base, 0.11, None, overlap=(fade_time,0)), vowel)
-
-        return self._norm(_utils.crossfade_add_many([n, y, u, v],fade_time=fade_time))
+    
+        fade = 0.04
+    
+        # ===== segment定義 =====
+        segments = [
+            ("n",     0.00, 0.04, (0.0,  fade)),
+            ("y",     0.04, 0.08, (fade, fade)),
+            ("u",     0.08, 0.11, (fade, fade)),
+            (vowel,   0.11, None, (fade, 0.0)),
+        ]
+    
+        waves = []
+    
+        for key, start, end, overlap in segments:
+            sliced = self._slice(base, start, end, overlap=overlap)
+            filtered = self._f(sliced, key)
+            waves.append(filtered)
+    
+        return self._norm(
+            _utils.crossfade_add_many(waves, fade_time=fade)
+        )
 
     # ===== y =====
     def y_generate(self, freq, t, vowel):
@@ -88,13 +100,3 @@ class VowelGenerator:
         v = self._f(self._slice(base, 0.12), vowel)
 
         return self._norm(_utils.crossfade_add_many([y, u, v]))
-
-    # ===== w =====
-    def w_generate(self, freq, t, vowel):
-        base = self._pulse(freq, t)
-
-        w = self._f(self._slice(base, 0, 0.06), "w")
-        u = self._f(self._slice(base, 0.06, 0.12), "u")
-        v = self._f(self._slice(base, 0.12), vowel)
-
-        return self._norm(_utils.crossfade_add_many([w, u, v]))
