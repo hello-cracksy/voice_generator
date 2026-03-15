@@ -10,6 +10,7 @@
 | bw | 帯域幅 |
 | gain | 係数 |
 | syllable | 音節 |
+| mora | モーラ |
 | consonant | 子音 |
 | vowel | 母音 |
 | semivowel | 半母音 |
@@ -18,3 +19,6 @@
 | NASAL | 鼻音 |
 | voiced | 有声音 |
 | prime | 素（複合子音とかの） |
+
+[音素・音節・文節・モーラとは？日本語と多言語の違いも解説](https://st-labo.blog/onso/)
+↑このサイトがわかりやすくまとめているので見てみてください
